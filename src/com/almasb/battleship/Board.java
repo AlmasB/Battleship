@@ -36,13 +36,26 @@ public class Board extends Parent {
     public boolean placeShip(Ship ship, int x, int y) {
         if (canPlaceShip(ship, x, y)) {
             int length = ship.type;
+            boolean vertical = ship.vertical;
 
-            for (int i = y; i < y + length; i++) {
-                Cell cell = getCell(x, i);
-                cell.ship = ship;
-                if (!enemy) {
-                    cell.setFill(Color.WHITE);
-                    cell.setStroke(Color.GREEN);
+            if (vertical) {
+                for (int i = y; i < y + length; i++) {
+                    Cell cell = getCell(x, i);
+                    cell.ship = ship;
+                    if (!enemy) {
+                        cell.setFill(Color.WHITE);
+                        cell.setStroke(Color.GREEN);
+                    }
+                }
+            }
+            else {
+                for (int i = x; i < x + length; i++) {
+                    Cell cell = getCell(i, y);
+                    cell.ship = ship;
+                    if (!enemy) {
+                        cell.setFill(Color.WHITE);
+                        cell.setStroke(Color.GREEN);
+                    }
                 }
             }
 
@@ -77,21 +90,42 @@ public class Board extends Parent {
 
     private boolean canPlaceShip(Ship ship, int x, int y) {
         int length = ship.type;
+        boolean vertical = ship.vertical;
 
-        for (int i = y; i < y + length; i++) {
-            if (!isValidPoint(x, i))
-                return false;
-
-            Cell cell = getCell(x, i);
-            if (cell.ship != null)
-                return false;
-
-            for (Cell neighbor : getNeighbors(x, i)) {
+        if (vertical) {
+            for (int i = y; i < y + length; i++) {
                 if (!isValidPoint(x, i))
                     return false;
 
-                if (neighbor.ship != null)
+                Cell cell = getCell(x, i);
+                if (cell.ship != null)
                     return false;
+
+                for (Cell neighbor : getNeighbors(x, i)) {
+                    if (!isValidPoint(x, i))
+                        return false;
+
+                    if (neighbor.ship != null)
+                        return false;
+                }
+            }
+        }
+        else {
+            for (int i = x; i < x + length; i++) {
+                if (!isValidPoint(i, y))
+                    return false;
+
+                Cell cell = getCell(i, y);
+                if (cell.ship != null)
+                    return false;
+
+                for (Cell neighbor : getNeighbors(i, y)) {
+                    if (!isValidPoint(i, y))
+                        return false;
+
+                    if (neighbor.ship != null)
+                        return false;
+                }
             }
         }
 

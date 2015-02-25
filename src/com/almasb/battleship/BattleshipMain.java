@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -53,7 +54,7 @@ public class BattleshipMain extends Application {
                 return;
 
             Cell cell = (Cell) event.getSource();
-            if (playerBoard.placeShip(new Ship(shipsToPlace), cell.x, cell.y)) {
+            if (playerBoard.placeShip(new Ship(shipsToPlace, event.getButton() == MouseButton.PRIMARY), cell.x, cell.y)) {
                 if (--shipsToPlace == 0) {
                     startGame();
                 }
@@ -93,7 +94,7 @@ public class BattleshipMain extends Application {
             int x = random.nextInt(10);
             int y = random.nextInt(10);
 
-            if (enemyBoard.placeShip(new Ship(type), x, y)) {
+            if (enemyBoard.placeShip(new Ship(type, Math.random() < 0.5), x, y)) {
                 type--;
             }
         }

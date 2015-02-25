@@ -7,13 +7,13 @@ import javafx.scene.shape.Rectangle;
 
 public class Ship extends Parent {
     public int type;
-    // TODO: impl
     public boolean vertical = true;
 
     private int health;
 
-    public Ship(int type) {
+    public Ship(int type, boolean vertical) {
         this.type = type;
+        this.vertical = vertical;
         health = type;
 
         VBox vbox = new VBox();

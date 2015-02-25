@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -21,6 +20,10 @@ public class BattleshipMain extends Application {
 
     private int shipsToPlace = 5;
 
+    private boolean enemyTurn = false;
+
+    private Random random = new Random();
+
     private Parent createContent() {
         BorderPane root = new BorderPane();
         root.setPrefSize(600, 800);
@@ -32,20 +35,17 @@ public class BattleshipMain extends Application {
                 return;
 
             Cell cell = (Cell) event.getSource();
-            if (cell.wasShot())
+            if (cell.wasShot)
                 return;
 
-            cell.setFill(Color.BLACK);
-            cell.ship.ifPresent(ship -> {
-                ship.hit();
-                if (!ship.isAlive()) {
-                    if (--enemyBoard.ships == 0) {
-                        System.out.println("GAME OVER");
-                    }
-                }
+            enemyTurn = !cell.shoot();
 
-                cell.setFill(Color.RED);
-            });
+            if (enemyBoard.ships == 0) {
+                System.out.println("YOU WIN");
+            }
+
+            if (enemyTurn)
+                enemyMove();
         });
 
         playerBoard = new Board(false, event -> {
@@ -54,8 +54,7 @@ public class BattleshipMain extends Application {
 
             Cell cell = (Cell) event.getSource();
             if (playerBoard.placeShip(new Ship(shipsToPlace), cell.x, cell.y)) {
-                shipsToPlace--;
-                if (shipsToPlace == 0) {
+                if (--shipsToPlace == 0) {
                     startGame();
                 }
             }
@@ -69,11 +68,26 @@ public class BattleshipMain extends Application {
         return root;
     }
 
+    private void enemyMove() {
+        while (enemyTurn) {
+            int x = random.nextInt(10);
+            int y = random.nextInt(10);
+
+            Cell cell = playerBoard.getCell(x, y);
+            if (cell.wasShot)
+                continue;
+
+            enemyTurn = cell.shoot();
+
+            if (playerBoard.ships == 0) {
+                System.out.println("YOU LOSE");
+            }
+        }
+    }
+
     private void startGame() {
         // place enemy ships;
         int type = 5;
-
-        Random random = new Random();
 
         while (type > 0) {
             int x = random.nextInt(10);

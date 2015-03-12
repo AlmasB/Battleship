@@ -43,6 +43,7 @@ public class BattleshipMain extends Application {
 
             if (enemyBoard.ships == 0) {
                 System.out.println("YOU WIN");
+                System.exit(0);
             }
 
             if (enemyTurn)
@@ -82,12 +83,13 @@ public class BattleshipMain extends Application {
 
             if (playerBoard.ships == 0) {
                 System.out.println("YOU LOSE");
+                System.exit(0);
             }
         }
     }
 
     private void startGame() {
-        // place enemy ships;
+        // place enemy ships
         int type = 5;
 
         while (type > 0) {

@@ -36,9 +36,8 @@ public class Board extends Parent {
     public boolean placeShip(Ship ship, int x, int y) {
         if (canPlaceShip(ship, x, y)) {
             int length = ship.type;
-            boolean vertical = ship.vertical;
 
-            if (vertical) {
+            if (ship.vertical) {
                 for (int i = y; i < y + length; i++) {
                     Cell cell = getCell(x, i);
                     cell.ship = ship;
@@ -90,9 +89,8 @@ public class Board extends Parent {
 
     private boolean canPlaceShip(Ship ship, int x, int y) {
         int length = ship.type;
-        boolean vertical = ship.vertical;
 
-        if (vertical) {
+        if (ship.vertical) {
             for (int i = y; i < y + length; i++) {
                 if (!isValidPoint(x, i))
                     return false;
